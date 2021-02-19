@@ -128,7 +128,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 }
 ```
 
-6. 指定使用数据源类型注解，配合 UsingDataSourceAspect、DynamicDataSource 实现数据源切换
+6. 指定使用数据源类型注解
 
 ```java
 @Target(ElementType.METHOD)
@@ -138,7 +138,7 @@ public @interface UsingDataSource {
 }
 ```
 
-7. 数据源切换拦截切面，配合 UsingDataSource、DynamicDataSource 实现数据源切换
+7. 数据源切换拦截切面
 
 ```java
 @Slf4j
