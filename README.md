@@ -22,7 +22,7 @@
          username: root
          password: rootroot
        slave2:
-         jdbc-url: jdbc:mysql://localhost:3306/multi_datasource_slave
+         jdbc-url: jdbc:mysql://localhost:3306/multi_datasource_slave_2
          username: root
          password: rootroot
    ```
@@ -195,7 +195,70 @@
        }
    }
    ```
-
+   
 9. Have fun! 😁
 
    你可以使用 `MultiDatasourceApplicationTests.getUser()` 进行测试
+   
+   ```java
+   @SpringBootTest
+   class MultiDatasourceApplicationTests {
+   
+     @Autowired
+     private UserService userService;
+   
+     @Test
+     void contextLoads() {
+     }
+   
+     @Test
+     public void getUser() {
+       User user;
+       user = userService.getUser(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUserFromDefault(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUserFromSlave1(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUserFromSlave2(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUser(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUserFromDefault(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUserFromSlave1(1);
+       System.out.println("user = " + user);
+   
+       user = userService.getUserFromSlave2(1);
+       System.out.println("user = " + user);
+     }
+   }
+   ```
+   
+   ```bash
+   user = User(id=1, username=master_username, password=master_password, sex=1, create_time=Fri Feb 19 11:59:35 CST 2021, update_time=Fri Feb 19 11:59:35 CST 2021, deleted=0)
+   2021-02-20 10:02:12.169  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is MASTER
+   user = User(id=1, username=master_username, password=master_password, sex=1, create_time=Fri Feb 19 11:59:35 CST 2021, update_time=Fri Feb 19 11:59:35 CST 2021, deleted=0)
+   2021-02-20 10:02:12.171  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is SLAVE
+   2021-02-20 10:02:12.172  INFO 13053 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+   2021-02-20 10:02:12.185  INFO 13053 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+   user = User(id=1, username=slave_username, password=slave_password, sex=1, create_time=Fri Feb 19 17:05:37 CST 2021, update_time=Fri Feb 19 17:05:37 CST 2021, deleted=0)
+   2021-02-20 10:02:12.186  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is SLAVE_2
+   2021-02-20 10:02:12.187  INFO 13053 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+   2021-02-20 10:02:12.199  INFO 13053 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+   user = User(id=1, username=slave_2_username, password=slave_2_password, sex=1, create_time=Sat Feb 20 10:00:59 CST 2021, update_time=Sat Feb 20 10:00:59 CST 2021, deleted=0)
+   user = User(id=1, username=master_username, password=master_password, sex=1, create_time=Fri Feb 19 11:59:35 CST 2021, update_time=Fri Feb 19 11:59:35 CST 2021, deleted=0)
+   2021-02-20 10:02:12.203  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is MASTER
+   user = User(id=1, username=master_username, password=master_password, sex=1, create_time=Fri Feb 19 11:59:35 CST 2021, update_time=Fri Feb 19 11:59:35 CST 2021, deleted=0)
+   2021-02-20 10:02:12.206  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is SLAVE
+   user = User(id=1, username=slave_username, password=slave_password, sex=1, create_time=Fri Feb 19 17:05:37 CST 2021, update_time=Fri Feb 19 17:05:37 CST 2021, deleted=0)
+   2021-02-20 10:02:12.208  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is SLAVE_2
+   user = User(id=1, username=slave_2_username, password=slave_2_password, sex=1, create_time=Sat Feb 20 10:00:59 CST 2021, update_time=Sat Feb 20 10:00:59 CST 2021, deleted=0)
+   ```
+
