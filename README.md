@@ -241,7 +241,7 @@
    }
    ```
    
-   ```bash
+   ```shell
    user = User(id=1, username=master_username, password=master_password, sex=1, create_time=Fri Feb 19 11:59:35 CST 2021, update_time=Fri Feb 19 11:59:35 CST 2021, deleted=0)
    2021-02-20 10:02:12.169  INFO 13053 --- [           main] c.e.m.config.UsingDataSourceAspect       : data source type is MASTER
    user = User(id=1, username=master_username, password=master_password, sex=1, create_time=Fri Feb 19 11:59:35 CST 2021, update_time=Fri Feb 19 11:59:35 CST 2021, deleted=0)
