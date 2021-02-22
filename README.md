@@ -2,11 +2,26 @@
 
 *SpringBoot Multi-DataSource Demo*
 
-1. 修改 Application，关闭数据源自动配置
+## Usage
 
-   ```java
-   @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-   ```
+```java
+// In Mapper
+@UsingDataSource(DataSourceType.SLAVE)
+User selectByPrimaryKey(Integer id);
+
+// Or In Service
+@UsingDataSource(DataSourceType.MASTER)
+public User getUserFromSlave1(Integer id) {
+  return userDao.selectByPrimaryKey(id);
+}
+
+@UsingDataSource(DataSourceType.SLAVE)
+public User getUserFromSlave(Integer id) {
+  return userDao.selectByPrimaryKey(id);
+}
+```
+
+## How to
 
 2. 在 application.yml 中添加数据源对应的配置信息
 
@@ -27,14 +42,15 @@
          password: rootroot
    ```
 
-3. 数据源配置
+2. 数据源配置
 
    ```java
    @Configuration
+   @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
    public class DataSourceConfig {
    
        /**
-        * 主库数据源配置，Bean name 须与 DataSourceType 中对应枚举类型名相同
+        * 主库数据源配置，Bean name 与 {@link DataSourceType} 中对应枚举类型名相同，以达到校验作用
         */
        @Bean("MASTER")
        @ConfigurationProperties(prefix = "spring.datasource.master")
@@ -83,27 +99,24 @@
        ;
    
        /**
-        * 获取默认的数据源类型
+        * 默认的数据源类型
         */
-       public static DataSourceType getDefaultValue() {
-           return MASTER;
-       }
+       public static final DataSourceType DEFAULT = MASTER;
    }
    ```
-
+   
 5. 动态数据源配置，配合 UsingDataSource、UsingDataSourceAspect 实现数据源切换
 
    ```java
    @Primary
    @Component
-   public class DynamicDataSource extends AbstractRoutingDataSource {
+   public class DynamicRoutingDataSource extends AbstractRoutingDataSource {
    
        private final Map<String, DataSource> dataSourceMap;
    
-       public static final ThreadLocal<DataSourceType> TYPE_HOLDER
-               = ThreadLocal.withInitial(DataSourceType::getDefaultValue);
+       public static final ThreadLocal<DataSourceType> TYPE_HOLDER = ThreadLocal.withInitial(() -> DataSourceType.DEFAULT);
    
-       public DynamicDataSource(Map<String, DataSource> dataSourceMap) {
+       public DynamicRoutingDataSource(Map<String, DataSource> dataSourceMap) {
            this.dataSourceMap = dataSourceMap;
        }
    
@@ -115,7 +128,7 @@
        @PostConstruct
        private void postConstruct() {
            // 设置默认数据源
-           String defaultDataSourceName = DataSourceType.getDefaultValue().name();
+           String defaultDataSourceName = DataSourceType.DEFAULT.name();
            DataSource defaultDataSource = dataSourceMap.get(defaultDataSourceName);
            setDefaultTargetDataSource(defaultDataSource);
    
@@ -126,7 +139,7 @@
        }
    }
    ```
-
+   
 6. 指定使用数据源类型注解
 
    ```java
@@ -150,13 +163,13 @@
            DataSourceType type = usingDataSource.value();
            log.debug("data source type is {}", type);
            // 保存要切换到的数据源类型
-           DynamicDataSource.TYPE_HOLDER.set(type);
+           DynamicRoutingDataSource.TYPE_HOLDER.set(type);
            Object res;
            try {
                res = joinPoint.proceed();
            } finally {
                // 恢复数据源
-               DynamicDataSource.TYPE_HOLDER.remove();
+               DynamicRoutingDataSource.TYPE_HOLDER.remove();
            }
            return res;
        }
