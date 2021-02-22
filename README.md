@@ -23,7 +23,7 @@ public User getUserFromSlave(Integer id) {
 
 ## How to
 
-2. 在 application.yml 中添加数据源对应的配置信息
+1. 在 application.yml 中添加数据源对应的配置信息
 
    ```yml
    spring:
@@ -78,7 +78,7 @@ public User getUserFromSlave(Integer id) {
    }
    ```
 
-4. 定义数据源类型枚举
+3. 定义数据源类型枚举
 
    ```java
    public enum DataSourceType {
@@ -105,7 +105,7 @@ public User getUserFromSlave(Integer id) {
    }
    ```
    
-5. 动态数据源配置，配合 UsingDataSource、UsingDataSourceAspect 实现数据源切换
+4. 动态数据源配置，配合 UsingDataSource、UsingDataSourceAspect 实现数据源切换
 
    ```java
    @Primary
@@ -140,7 +140,7 @@ public User getUserFromSlave(Integer id) {
    }
    ```
    
-6. 指定使用数据源类型注解
+5. 指定使用数据源类型注解
 
    ```java
    @Target(ElementType.METHOD)
@@ -150,7 +150,7 @@ public User getUserFromSlave(Integer id) {
    }
    ```
 
-7. 数据源切换拦截切面
+6. 数据源切换拦截切面
 
    ```java
    @Slf4j
@@ -176,7 +176,7 @@ public User getUserFromSlave(Integer id) {
    }
    ```
 
-8. 使用
+7. 使用
 
    ```java
    @Service
@@ -209,7 +209,7 @@ public User getUserFromSlave(Integer id) {
    }
    ```
    
-9. Have fun! 😁
+8. Have fun! 😁
 
    你可以使用 `MultiDatasourceApplicationTests.getUser()` 进行测试
    
