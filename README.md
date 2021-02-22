@@ -1,6 +1,6 @@
-# 简单实现 SpringBoot 多数据源
+# 简单实现 Spring Boot 多数据源
 
-*Simple SpringBoot Multi-DataSource*
+*Simple Spring Boot Multi-DataSource*
 
 ## Usage
 
