@@ -1,6 +1,6 @@
-# SpringBoot 多数据源 Demo
+# 简单实现 SpringBoot 多数据源
 
-*SpringBoot Multi-DataSource Demo*
+*Simple SpringBoot Multi-DataSource*
 
 ## Usage
 
