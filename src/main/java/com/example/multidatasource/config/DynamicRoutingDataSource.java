@@ -10,18 +10,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 动态数据源配置，配合 {@link UsingDataSource}、{@link UsingDataSourceAspect} 实现数据源切换
+ * 动态路由数据源配置，配合 {@link UsingDataSource}、{@link UsingDataSourceAspect} 实现数据源切换
  */
 @Primary
 @Component
-public class DynamicDataSource extends AbstractRoutingDataSource {
+public class DynamicRoutingDataSource extends AbstractRoutingDataSource {
 
     private final Map<String, DataSource> dataSourceMap;
 
-    public static final ThreadLocal<DataSourceType> TYPE_HOLDER
-            = ThreadLocal.withInitial(DataSourceType::getDefaultValue);
+    public static final ThreadLocal<DataSourceType> TYPE_HOLDER = ThreadLocal.withInitial(() -> DataSourceType.DEFAULT);
 
-    public DynamicDataSource(Map<String, DataSource> dataSourceMap) {
+    public DynamicRoutingDataSource(Map<String, DataSource> dataSourceMap) {
         this.dataSourceMap = dataSourceMap;
     }
 
@@ -33,7 +32,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     @PostConstruct
     private void postConstruct() {
         // 设置默认数据源
-        String defaultDataSourceName = DataSourceType.getDefaultValue().name();
+        String defaultDataSourceName = DataSourceType.DEFAULT.name();
         DataSource defaultDataSource = dataSourceMap.get(defaultDataSourceName);
         setDefaultTargetDataSource(defaultDataSource);
 

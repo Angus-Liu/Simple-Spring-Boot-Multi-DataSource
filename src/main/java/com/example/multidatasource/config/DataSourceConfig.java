@@ -1,5 +1,7 @@
 package com.example.multidatasource.config;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +13,11 @@ import javax.sql.DataSource;
  * 数据源配置
  */
 @Configuration
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 public class DataSourceConfig {
 
     /**
-     * 主库数据源配置，Bean name 须与 DataSourceType 中对应枚举类型名相同
+     * 主库数据源配置，Bean name 与 {@link DataSourceType} 中对应枚举类型名相同，以达到校验作用
      */
     @Bean("MASTER")
     @ConfigurationProperties(prefix = "spring.datasource.master")

@@ -21,9 +21,7 @@ public enum DataSourceType {
     ;
 
     /**
-     * 获取默认的数据源类型
+     * 默认的数据源类型
      */
-    public static DataSourceType getDefaultValue() {
-        return MASTER;
-    }
+    public static final DataSourceType DEFAULT = MASTER;
 }
